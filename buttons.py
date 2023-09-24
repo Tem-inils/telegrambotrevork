@@ -13,6 +13,7 @@ def main_menu(get_pr_name_id):
 
     # Генерация кнопок с товарами(базы данных)
     all_products = [InlineKeyboardButton(text=f'{i[0]}', callback_data=i[1]) for i in get_pr_name_id]
+    print(all_products)
 
     #Обединить наши кнопки с пространством
     buttons.row(order)
@@ -36,14 +37,18 @@ def choose_product_count(plus_or_minus='', current_amount=1):
     #Отслеживать плюс или минус
     if plus_or_minus == 'plus':
         new_amount = int(current_amount) + 1
+        print(f'bt.cpc plus{new_amount}')
 
         count = InlineKeyboardButton(text=str(new_amount), callback_data=str(new_amount))
+        print(f"bt.cpc vixod {count}")
 
-    elif plus_or_minus == 'munis':
+    elif plus_or_minus == 'minus':
         if int(current_amount) > 1:
             new_amount = int(current_amount) - 1
+            print(f'bt.cpc minus{new_amount}')
 
             count = InlineKeyboardButton(text=str(new_amount), callback_data=str(new_amount))
+            print(f"bt.cpc vixod {count}")
 
     # Обединить кнопки с пространством
     buttons.add(minus, count, plus)
