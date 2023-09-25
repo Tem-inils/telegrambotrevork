@@ -146,6 +146,7 @@ def main_menu_handle(call):
         # формируем сообщение со всеми данными
         full_text = 'Ваш заказ:\n\n'
         user_info = database.get_user_number_name(user_id)
+        print(user_info)
         full_text += f'Имя: {user_info[0]}\nНомер телефона: {user_info[1]}\n\n'
         total_amount = 0
 

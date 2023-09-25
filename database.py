@@ -132,13 +132,7 @@ def get_exact_user_cart(user_id):
     # переводчик/исполнитель
     sql = connection.cursor()
 
-    user_cart = sql.execute('SELECT '
-                            'products.pr_name, '
-                            'user_cart.quantity, '
-                            'user_cart.total_for_price'
-                            'FROM user_cart'
-                            'INNER JOIN products ON products.pr_id=user_cart.user_product'
-                            'WHERE user_id=?;',
+    user_cart = sql.execute('SELECT products.pr_name, user_cart.quantity, user_cart.total_for_price FROM products INNER JOIN user_cart ON products.pr_id=user_cart.user_product WHERE user_cart.user_id=?;',
                             (user_id,)).fetchall()
     print(user_cart)
 
@@ -153,10 +147,9 @@ def get_user_number_name(user_id):
 
     exact_user = sql.execute('SELECT name, phone_number FROM users WHERE tg_id=?;', (user_id,))
 
-    print(exact_user.fetchone())
+    # print(exact_user.fetchone())
     return exact_user.fetchone()
 
-    db.commit()
 
 
 
