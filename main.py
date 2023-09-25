@@ -1,8 +1,9 @@
 import telebot
 import buttons
 import database
+from telebot import types
 
-bot = telebot.TeleBot('6383368679:AAHayzUHHVwfm5iGWB-rMrJzczYH2X-1dkA')
+bot = telebot.TeleBot('6396156210:AAHR0uDD1ZlMrfeKdPAPGebgoGLYm51GW4Q')
 
 users = {}
 
@@ -138,27 +139,26 @@ def main_menu_handle(call):
 
     # Если нажал на кнопку: Оформить заказ
     if call.data == 'order':
-        if call.data == 'order':
-            # Удалим сообщение с верхними кнопками
-            bot.delete_message(user_id, message_id)
-            user_cart = database.get_exact_user_cart(user_id)
+        # Удалим сообщение с верхними кнопками
+        bot.delete_message(user_id, message_id)
+        user_cart = database.get_exact_user_cart(user_id)
 
-            # формируем сообщение со всеми данными
-            full_text = 'Ваш заказ:\n\n'
-            user_info = database.
-            full_text += f'Имя: {user_info[0]}\nНомер телефона: {user_info[1]}\n\n'
-            total_amount = 0
+        # формируем сообщение со всеми данными
+        full_text = 'Ваш заказ:\n\n'
+        user_info = database.get_user_number_name(user_id)
+        full_text += f'Имя: {user_info[0]}\nНомер телефона: {user_info[1]}\n\n'
+        total_amount = 0
 
-            for i in user_cart:
-                full_text += f'{i[0]} x {i[1]} = {i[2]}\n'
-                total_amount += i[2]
+        for i in user_cart:
+            full_text += f'{i[0]} x {i[1]} = {i[2]}\n'
+            total_amount += i[2]
 
-            # Итог и Адрес
-            full_text += f'\nИтог: {total_amount}\nАдрес: {address}'
+        # Итог и Адрес
+        full_text += f'\nИтог: {total_amount}'
 
-            bot.send_message(user_id, full_text, reply_markup=buttons.get_accept_kb())
-            # Переход на этап подтверждение
-            bot.register_next_step_handler(message, get_accept, address, full_text)
+        bot.send_message(user_id, full_text, reply_markup=buttons.get_accept_kb())
+        # Переход на этап подтверждение
+        bot.register_next_step_handler(call.message, get_accept,  full_text)
 
     # Если нажал на кнопку "Корзина"
     elif call.data == 'cart':
@@ -192,6 +192,38 @@ def main_menu_handle(call):
                               user_id,
                               message_id,
                               reply_markup=buttons.main_menu_kb(database.get_pr_name_id()))
+
+
+
+# функция сохранения статуса заказа
+def get_accept(message, full_text):
+    user_id = message.from_user.id
+    message_id = message.message_id
+    user_answer = message.text
+
+    # получим все продукты из базы для кнопок
+    products = database.get_pr_name_id()
+
+    # Если пользователь нажал "подтвердить"
+    if user_answer == 'Подтвердить':
+        admin_id = 302137006
+        # очистить корзину пользователя
+        database.delete_product_from_cart(user_id)
+
+        # отправим админу сообщение о новом заказе
+        bot.send_message(admin_id, full_text.replace("Ваш", "Новый"))
+
+        # отправим ответ
+        bot.send_message(user_id, 'Заказ оформлен', reply_markup=types.ReplyKeyboardRemove())
+
+    elif user_answer == 'Отменить':
+        # отправим ответ
+        bot.send_message(user_id, 'Заказ отменен', reply_markup=types.ReplyKeyboardRemove())
+
+    # Обратно в меню
+    bot.send_message(user_id, 'Меню', reply_markup=buttons.main_menu(products))
+
+
 
 
 # Обработчик выбора товара

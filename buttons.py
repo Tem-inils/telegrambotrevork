@@ -115,3 +115,14 @@ def geo_buttons():
     buttons.add(g_button)
 
     return buttons
+
+# кнопки для подтверждения заказа
+def get_accept_kb():
+    kb = ReplyKeyboardMarkup(resize_keyboard=True)
+
+    yes = KeyboardButton('Подтвердить')
+    no = KeyboardButton('Отменить')
+
+    kb.add(yes, no)
+
+    return kb
