@@ -116,13 +116,13 @@ def add_product_to_cart(user_id, user_product, quantity):
 
 
 # Удаление продуктов из корзины
-def delete_product_from_cart(pr_id, user_id):
+def delete_product_from_cart(user_id):
     db = sqlite3.connect('dostavka.db')
 
     fake_evos = db.cursor()
 
     # Удалить продукт из корзины через pr_id(продукт айди)
-    fake_evos.execute('DELETE FROM user_cart WHERE user_product=? AND user_id=?;', (pr_id, user_id))
+    fake_evos.execute('DELETE FROM user_cart WHERE user_id=?;', (user_id,))
 
 
 

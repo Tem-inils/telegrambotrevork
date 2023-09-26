@@ -181,7 +181,7 @@ def main_menu_handle(call):
         bot.edit_message_text(full_text,
                               user_id,
                               message_id,
-                              reply_markup=buttons.get_cart_kb())
+                              reply_markup=buttons.get_cart())
 
     # Если нажал на очистить корзину
     elif call.data == 'clear_cart':
@@ -192,7 +192,7 @@ def main_menu_handle(call):
         bot.edit_message_text('Ваша корзина очищена',
                               user_id,
                               message_id,
-                              reply_markup=buttons.main_menu_kb(database.get_pr_name_id()))
+                              reply_markup=buttons.main_menu(database.get_pr_name_id()))
 
 
 
